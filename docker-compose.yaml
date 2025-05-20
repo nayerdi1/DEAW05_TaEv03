@@ -1,0 +1,64 @@
+services:    
+  bbdd:
+      container_name: bbdd
+      image: mariadb:10.5
+      environment:
+        MYSQL_DATABASE: usuarios
+        MYSQL_ROOT_PASSWORD: root
+      ports:
+      - "3306:3306"
+      volumes:
+        - ./bbdd:/docker-entrypoint-initdb.d
+        - data:/var/lib/mysql
+      networks:
+        - bbdd-java-angular
+      restart: always  # Reiniciar siempre el contenedor si se detiene
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    depends_on:
+      - bbdd
+    environment:
+      - PMA_HOST=bbdd
+      - PMA_PORT=3306
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "8081:80"
+    networks:
+      - bbdd-java-angular
+    restart: always
+
+  usuarios-backend:
+    build: ./usuarios-backend
+    container_name: usuarios-backend
+    depends_on:
+      - bbdd
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://bbdd:3306/usuarios
+      - SPRING_DATASOURCE_USER=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8080:8080"
+    networks:
+      - bbdd-java-angular
+    restart: always
+
+  frontend-app:
+    build: ./angular-app
+    container_name: frontend-app
+    ports:
+      - "80:80"
+    networks:
+      - bbdd-java-angular
+
+volumes:
+  data:
+    driver: local  # Volumen local para persistencia de datos
+  bbdd:
+    driver: local # Volumen local para scripts SQL de inicialización
+
+networks:
+    # red que comparte servicio 
+    bbdd-java-angular:
+      driver: bridge
