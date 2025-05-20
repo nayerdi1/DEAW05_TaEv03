@@ -1,0 +1,39 @@
+
+<div class="container mt-4" *ngIf="usuario">
+  <div class="card shadow-sm p-3">
+    <div *ngIf="!editando">
+      <h4 class="card-title">{{ usuario.nombre }}</h4>
+      <h6 class="card-subtitle mb-2 text-muted">Usuario: {{ usuario.usuario }}</h6>
+      <h6 class="card-subtitle mb-2 text-muted">Rol: {{ usuario.rol }}</h6>
+
+      <button class="btn btn-primary mt-3 me-2" (click)="activarEdicion()">Modificar</button>
+      <button class="btn btn-danger mt-3 me-2" (click)="borrarUsuario()">Eliminar</button>
+      <a routerLink="/usuarios" class="btn btn-secondary mt-3">Volver</a>
+    </div>
+
+    <form *ngIf="editando" (ngSubmit)="guardarCambios()">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input id="nombre" class="form-control" [(ngModel)]="usuarioEdit.nombre" name="nombre" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="usuario" class="form-label">Usuario</label>
+        <input id="usuario" class="form-control" [(ngModel)]="usuarioEdit.usuario" name="usuario" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="rol" class="form-label">Password</label>
+        <input id="password" class="form-control" [(ngModel)]="usuarioEdit.contrasenia" name="password" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="rol" class="form-label">Rol</label>
+        <input id="rol" class="form-control" [(ngModel)]="usuarioEdit.rol" name="rol" required />
+      </div>
+
+      <button type="submit" class="btn btn-success me-2">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+    </form>
+  </div>
+</div>

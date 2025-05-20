@@ -1,0 +1,21 @@
+<!-- Botón añadir usuario -->
+<button class="btn btn-primary mb-3" (click)="crearNuevo()">Añadir usuario</button>
+
+<app-usuario-form
+  *ngIf="mostrarFormulario"
+  [usuario]="usuarioSeleccionado"
+  (guardar)="guardarUsuario($event)"
+  (cancelar)="cancelarEdicion()"
+></app-usuario-form>
+<div class="container mt-4">
+  <div *ngFor="let usuario of listaUsuarios" class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <h4 class="card-title">{{ usuario.nombre }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">Usuario: {{ usuario.usuario }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">Rol: {{ usuario.rol }}</h6>
+        <a class="btn btn-outline-primary mt-2" [routerLink]="['/usuario', usuario.id]">
+            Ver detalles
+        </a>
+    </div>
+  </div>
+</div>
